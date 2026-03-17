@@ -14,12 +14,10 @@ function App() {
   const [result, setResult] = useState(null)
   const [scanning, setScanning] = useState(false)
 
-  // Handle text input changes - auto-detect sensitive data
   const handleTextChange = useCallback((text) => {
     setInputText(text)
     setResult(null)
     if (text.trim().length > 10) {
-      // Debounced detection
       const detected = detectSensitiveData(text)
       setFindings(detected)
     } else {
@@ -27,16 +25,13 @@ function App() {
     }
   }, [])
 
-  // Handle file content
   const handleFileContent = useCallback((content) => {
     handleTextChange(content)
   }, [handleTextChange])
 
-  // Perform scrubbing
   function handleScrub() {
     if (!inputText.trim()) return
     setScanning(true)
-    // Use setTimeout to let the UI update before heavy processing
     setTimeout(() => {
       const detected = detectSensitiveData(inputText)
       const { scrubbed, summary } = scrubText(inputText, detected, mode)
@@ -45,14 +40,12 @@ function App() {
     }, 50)
   }
 
-  // Reset to start over
   function handleReset() {
     setInputText('')
     setFindings([])
     setResult(null)
   }
 
-  // Handle logout
   function handleLogout() {
     logout()
     setAuthed(false)
@@ -64,33 +57,31 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-950 text-gray-100">
+    <div className="min-h-screen bg-white text-neutral-900 flex flex-col">
       {/* Header */}
-      <header className="border-b border-gray-800">
-        <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+      <header className="border-b border-neutral-200">
+        <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-lg bg-indigo-600/20 flex items-center justify-center">
-              <svg className="w-5 h-5 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-              </svg>
-            </div>
+            <svg className="w-6 h-6 text-neutral-900" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+            </svg>
             <div>
-              <h1 className="text-lg font-bold text-white leading-tight">DataScrub</h1>
-              <p className="text-xs text-gray-500">Clean your data before AI</p>
+              <h1 className="text-base font-semibold text-neutral-900 leading-tight tracking-tight">DataScrub</h1>
+              <p className="text-xs text-neutral-400">Clean your data before AI</p>
             </div>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1">
             {result && (
               <button
                 onClick={handleReset}
-                className="text-sm text-gray-400 hover:text-gray-200 px-3 py-1.5 rounded-lg hover:bg-gray-800 transition-colors"
+                className="text-sm text-neutral-600 hover:text-neutral-900 px-3 py-1.5 rounded-lg hover:bg-neutral-100 transition-colors cursor-pointer"
               >
-                New Scrub
+                New scrub
               </button>
             )}
             <button
               onClick={handleLogout}
-              className="text-sm text-gray-500 hover:text-gray-300 px-3 py-1.5 rounded-lg hover:bg-gray-800 transition-colors"
+              className="text-sm text-neutral-400 hover:text-neutral-600 px-3 py-1.5 rounded-lg hover:bg-neutral-100 transition-colors cursor-pointer"
             >
               Lock
             </button>
@@ -98,11 +89,10 @@ function App() {
         </div>
       </header>
 
-      {/* Main content */}
-      <main className="max-w-6xl mx-auto px-4 py-8">
+      {/* Main */}
+      <main className="max-w-5xl mx-auto px-6 py-8 w-full flex-1">
         {!result ? (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Left: Input */}
             <div className="lg:col-span-2">
               <FileUpload
                 onFileContent={handleFileContent}
@@ -110,8 +100,6 @@ function App() {
                 textValue={inputText}
               />
             </div>
-
-            {/* Right: Controls */}
             <div>
               <ScrubControls
                 mode={mode}
@@ -133,9 +121,9 @@ function App() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-gray-800 mt-auto">
-        <div className="max-w-6xl mx-auto px-4 py-4 text-center">
-          <p className="text-xs text-gray-600">
+      <footer className="border-t border-neutral-100">
+        <div className="max-w-5xl mx-auto px-6 py-4 text-center">
+          <p className="text-xs text-neutral-400">
             All processing happens locally in your browser. No data is sent to any server.
           </p>
         </div>
